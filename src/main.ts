@@ -31,16 +31,11 @@ async function run() {
 
     const context = github.context;
     const issueNumber = parseInt(prNumber) || context.payload.pull_request?.number || context.payload.issue?.number;
-    core.info(context.action);
-    core.info(context.payload.pull_request?.title || 'nada');
-    if (context.action === 'edited' && context.payload?.changes?.title) {
-      const prTitle = context.payload.pull_request?.title
-      const titleRegex = new RegExp(`\\[GLOBAL-\\d*\\]`)
-      core.info(prTitle.match(titleRegex) || 'null');
-      if (!prTitle.match(titleRegex)) {
-        core.info("PR lint failed");
-        content = "Add [GLOBAL-XXX] to your PR title to link up your Jira ticket\n" + content
-      }
+    const prTitle = context.payload.pull_request?.title
+    const titleRegex = new RegExp(`\\[GLOBAL-\\d*\\]`)
+    if (!prTitle.match(titleRegex)) {
+      core.info("PR lint failed");
+      content = "Add [GLOBAL-XXX] to your PR title to link up your Jira ticket\n" + content
     }
     core.info(content);
 
