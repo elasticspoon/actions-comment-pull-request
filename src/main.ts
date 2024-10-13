@@ -37,9 +37,11 @@ async function run() {
       const prTitle = context.payload.pull_request?.title
       const titleRegex = new RegExp(`\\[GLOBAL-\\d*\\]`)
       if (!prTitle.match(titleRegex)) {
+        core.info("PR lint failed");
         content = "Add [GLOBAL-XXX] to your PR title to link up your Jira ticket\n" + content
       }
     }
+    core.info(content);
 
     const octokit = github.getOctokit(githubToken);
 
