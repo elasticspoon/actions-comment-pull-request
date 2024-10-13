@@ -31,8 +31,12 @@ async function run() {
 
     const context = github.context;
     const issueNumber = parseInt(prNumber) || context.payload.pull_request?.number || context.payload.issue?.number;
-    core.debug(context.action)
-    content = "reunning off main"
+    core.info(context.action);
+    core.info(context.payload.action || 'nada');
+    core.info(context.payload.issue?.body || 'nada');
+    core.info(context.payload.changes || 'nada');
+    core.info(context.payload.changes?.title || 'nada');
+    core.info(context.payload.action || 'nada');
     if (context.action === 'edited' && context.payload?.changes?.title) {
       const prTitle = context.payload.changes.title
       const titleRegex = new RegExp(`\\[GLOBAL-\\d*\\]`)
