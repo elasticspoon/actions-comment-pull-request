@@ -23,6 +23,7 @@ async function run() {
       return;
     }
 
+
     let content: string = message;
     if (!message && filePath) {
       content = fs.readFileSync(filePath, 'utf8');
@@ -30,6 +31,16 @@ async function run() {
 
     const context = github.context;
     const issueNumber = parseInt(prNumber) || context.payload.pull_request?.number || context.payload.issue?.number;
+    core.debug(context.action)
+    core.debug(context.payload.toJson())
+    content = "reunning off main"
+    if (context.action === 'edited' && context.payload?.changes?.title) {
+      const prTitle = context.payload.changes.title
+      const titleRegex = new RegExp(`\\[GLOBAL-\\d*\\]`)
+      if (!prTitle.match(titleRegex)) {
+        content = "Add [GLOBAL-XXX] to your PR title to link up your Jira ticket"
+      }
+    }
 
     const octokit = github.getOctokit(githubToken);
 
@@ -119,7 +130,7 @@ async function run() {
       return comment;
     }
 
-    const commentTagPattern = commentTag ? `<!-- thollander/actions-comment-pull-request "${commentTag}" -->` : null;
+    const commentTagPattern = commentTag ? `<!-- elasticspoon/actions-comment-pull-request "${commentTag}" -->` : null;
     const body = commentTagPattern ? `${content}\n${commentTagPattern}` : content;
 
     if (commentTagPattern) {
