@@ -36,6 +36,7 @@ async function run() {
     if (context.action === 'edited' && context.payload?.changes?.title) {
       const prTitle = context.payload.pull_request?.title
       const titleRegex = new RegExp(`\\[GLOBAL-\\d*\\]`)
+      core.info(prTitle.match(titleRegex));
       if (!prTitle.match(titleRegex)) {
         core.info("PR lint failed");
         content = "Add [GLOBAL-XXX] to your PR title to link up your Jira ticket\n" + content
