@@ -32,16 +32,12 @@ async function run() {
     const context = github.context;
     const issueNumber = parseInt(prNumber) || context.payload.pull_request?.number || context.payload.issue?.number;
     core.info(context.action);
-    core.info(context.payload.action || 'nada');
-    core.info(context.payload.issue?.body || 'nada');
-    core.info(context.payload.changes || 'nada');
-    core.info(context.payload.changes?.title || 'nada');
-    core.info(context.payload.action || 'nada');
+    core.info(context.payload.pull_request?.title || 'nada');
     if (context.action === 'edited' && context.payload?.changes?.title) {
-      const prTitle = context.payload.changes.title
+      const prTitle = context.payload.pull_request?.title
       const titleRegex = new RegExp(`\\[GLOBAL-\\d*\\]`)
       if (!prTitle.match(titleRegex)) {
-        content = "Add [GLOBAL-XXX] to your PR title to link up your Jira ticket"
+        content = "Add [GLOBAL-XXX] to your PR title to link up your Jira ticket\n" + content
       }
     }
 
